@@ -1,7 +1,7 @@
 import Router from 'express'
 import User from '../models/User.js'
 import jwt from 'jsonwebtoken'
-import secret from '../../config.js'
+import config from '../../config.js'
 import verifyToken from './verifyToken.js'
 
 const router = Router()
@@ -22,9 +22,11 @@ router.post('/login', async (req,res,next) => {
         return res.status(401).json({auth: false, token: null})
     }
 
-    const token = jwt.sign({id: user._id}, secret, {
+    const token = jwt.sign({id: user._id}, config.secret, {
         expiresIn: 60 * 60 * 24 
     })
+
+    //Trata lo que envia como un objeto
     res.json({auth: true, token})
 })
 
@@ -45,10 +47,11 @@ router.post('/register', async (req,res,next) => {
 
     //el token expira en un tiempo dado en segundos, osea 60 seg * 60 = 1 hora * 24 = 1 dia
     //secret es una clave que yo defino
-    const token = jwt.sign({id: user._id}, secret, {
+    const token = jwt.sign({id: user._id}, config.secret, {
         expiresIn: 60 * 60 * 24
     })
 
+    //Trata lo que envia como un objeto
     res.json({auth: true, token: token})
 })
 
@@ -63,7 +66,13 @@ router.get('/profile', verifyToken, async (req,res,next) => {
         return res.status(404).send('No user found')
     }
 
+    //Trata lo que envia como un objeto
     res.json(user)
+})
+
+//El * es para generar un mensaje cuando la ruta no fue implementada
+router.get('*', (req,res) => {
+    res.send('Route' + req.url + ' not implemented')
 })
 
 export default router

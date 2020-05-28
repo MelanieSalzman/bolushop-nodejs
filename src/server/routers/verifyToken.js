@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import secret from '../../config.js'
+import config from '../../config.js'
 
 function verifyToken (req, res, next) {
 
@@ -14,7 +14,7 @@ function verifyToken (req, res, next) {
         })
     }
 
-    const decoded = jwt.verify(token, secret)
+    const decoded = jwt.verify(token, config.secret)
     req.userId = decoded.id
     next()
 }

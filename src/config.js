@@ -1,3 +1,6 @@
-const secret = 'secretValueForJWT'
+const config = {
+    port: process.env.PORT,
+    secret: 'secretValueForJWT'
+}
 
-export default secret
+export default config

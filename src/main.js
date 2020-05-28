@@ -1,9 +1,14 @@
-import app from './server/app.js'
+import config from './config.js'
 import './database.js'
+import createServer from './server/app.js'
 
-async function init(){
-    await app.listen(3000);
-    console.log('Server on port 3000');
-}
+const app = createServer()
 
-init();
+    //El servidor se pone a escuchar en el puerto 3000
+   const server = app.listen(config.port, error => {
+       
+        if(error) throw new Error('Error en servidor:', error)
+   
+        console.log(`listening on port ${server.address().port}`)
+    });
+    
