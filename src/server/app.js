@@ -1,5 +1,6 @@
 import express from 'express';
-import authController from './routers/authController.js'
+//import authController from './routers/authController.js'
+import getAuthRouter from './routers/authRouter.js'
 
 function createApp() {
 //Genera un nueva instancia de servidor
@@ -14,7 +15,8 @@ app.use(express.json());
 //Con esta instruccion entiende los objetos que le llegan por formulario y lo convierte en un objeto javascript
 app.use(express.urlencoded({extended: false}));
 
-app.use(authController)
+//app.use(authController)
+app.use(getAuthRouter())
 
 return app
 }
