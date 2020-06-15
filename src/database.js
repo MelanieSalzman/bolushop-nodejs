@@ -1,8 +1,9 @@
 import mongoose from 'mongoose'
 
-mongoose.connect('mongodb://localhost/jwt', {
+mongoose.connect('mongodb://localhost/userseparated', {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
 })
 var db = mongoose.connection
 

@@ -1,5 +1,5 @@
 import Router from 'express'
-import verifyToken from './verifyTokenRouter.js'
+import verifyToken from '../middlewares/verifyToken.js'
 import { getAuthAPI } from '../apis/authAPI.js'
 
 
@@ -15,19 +15,19 @@ function getAuthRouter() {
         const userToBeLogged = req.body
 
         try {
-            const userLogged = await authAPI.login(userToBeLogged)
-            const validPassword = await authAPI.validatePass(userLogged,userToBeLogged)
+            const user = await authAPI.find(userToBeLogged)
+            const validPassword = await authAPI.validatePass(user,userToBeLogged)
 
             if (!validPassword) {
                 return res.status(401).json({ auth: false, token: null })
             }
-            const token = await authAPI.genToken(userLogged)
+            const token = await authAPI.genToken(user)
 
             //Trata lo que envia como un objeto
             res.json({ auth: true, token })
 
         } catch (err) {
-            res.status(404).send('The email doesn´t exists')
+            res.status(404).send('User doesn´t exists')
         }
     })
 
@@ -35,19 +35,17 @@ function getAuthRouter() {
     router.post('/register', async (req, res) => {
 
         const userToBeRegistered = req.body
-
+        console.log(userToBeRegistered)
         try {
 
             const userRegistered = await authAPI.register(userToBeRegistered)
             
-        console.log(userRegistered)
-            const token = await authAPI.genToken(userRegistered._id)
+            const token = await authAPI.genToken(userRegistered)
 
 
             //Trata lo que envia como un objeto
             res.json({ auth: true, token: token })
         } catch (err) {
-            //res.status(err.status).json(err)
             res.status(404).send('Cannot register user')
         }
 

@@ -3,48 +3,92 @@ import User from '../models/User.js'
 
 function getUsersDAOLocal() {
 
-    async function login(UserToBeLogged) {
-        const UserLogged = User.findOne({email: UserToBeLogged.email})
-        return UserLogged
-    }
+    async function create(UserToBeCreated) {
 
-    async function register(UserToBeRegistered) {
-
-        const UserRegistered = new User({
-            email: UserToBeRegistered.email,
-            password: UserToBeRegistered.password
+        const UserCreated = new User({
+            name: UserToBeCreated.name,
+           // username: UserToBeCreated.username,
+            email: UserToBeCreated.email,
+            password: UserToBeCreated.password,
+            rol: UserToBeCreated.rol
         })
-        return UserRegistered
+
+        return UserCreated
+    }
+    
+    async function findByEmail(email) {
+
+        const user = User.findOne({email: email}, { password: 0 });
+        return user
     }
 
-    async function findById(UserId) {
+    async function findByEmailWithPass(email) {
+
+        const user = User.findOne({email: email});
+        return user
+    }
+
+    async function findAll() {
+
+        const user = User.find({});
+        return user
+    }
+
+    async function save(user) {
+       user.save()
+    }
+
+    async function validatePassword(user,password) {
+        const validPassword = await user.validatePassword(password)
+        return validPassword
+     }
+
+     async function encryptPassword(user) {
+        
+        user.password = await user.encryptPassword(user.password)
+        return user
+     }
+
+     async function findById(UserId) {
 
         const user = User.findById(UserId, { password: 0 });
         return user
     }
 
-    async function saveUser(user) {
-       user.save()
+    async function replaceUser(id, user){
+
+        const userReplaced = User.findOneAndUpdate({_id: id}, {
+            name: user.name,
+         //   username: UserToBeCreated.username,
+            email: user.email,
+            password: user.password,
+            rol: user.rol
+        });
+        return userReplaced
     }
 
-    async function validatePassword(UserLogged,password) {
-        const validPassword = await UserLogged.validatePassword(password)
-        return validPassword
-     }
-
-     async function encryptPassword(user) {
-        user.password = await user.encryptPassword(user.password)
+    async function deleteOne(id){
+        const user = User.findOneAndDelete({_id: id});
         return user
-     }
+    }
 
+    async function deleteAll(){
+        const user = User.deleteMany({})
+        return user
+    }
 
     return {
-        login,
-        register,
+        create,
+        findByEmail,
+        findByEmailWithPass,
         findById,
-        saveUser,
+        findAll,
+        encryptPassword,
         validatePassword,
-        encryptPassword
+        save,
+        replaceUser,
+        deleteOne,
+        deleteAll
     }
 }
 

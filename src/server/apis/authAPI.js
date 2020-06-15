@@ -6,21 +6,20 @@ function getAuthAPI() {
 
     const usersDAO = getUsersDAO()
 
-    async function login(UserToBeLogged) {
-        const UserLogged = await usersDAO.login(UserToBeLogged)
+    async function find(UserToBeLogged) {
+        const UserLogged = await usersDAO.findByEmailWithPass(UserToBeLogged.email)
 
         return UserLogged
     }
 
     async function register(UserToBeRegistered) {
-        let UserRegistered = await usersDAO.register(UserToBeRegistered)
-        
-        UserRegistered = await usersDAO.encryptPassword(UserRegistered)
-        
+
+        let UserCreated = await usersDAO.create(UserToBeRegistered)
+        UserCreated = await usersDAO.encryptPassword(UserCreated)
         //user.save() para guardar en la bd
-        await usersDAO.saveUser(UserRegistered)
+        await usersDAO.save(UserCreated)
         
-        return UserRegistered
+        return UserCreated
     }
 
     async function findById(UserId) {
@@ -28,13 +27,22 @@ function getAuthAPI() {
         return user
     }
 
-    async function validatePass(UserLogged,UserToBeLogged) {
-        const validPassword = await usersDAO.validatePassword(UserLogged,UserToBeLogged.password)
+    async function validatePass(user,UserToBeLogged) {
+        const validPassword = await usersDAO.validatePassword(user,UserToBeLogged.password)
         return validPassword
     }
 
-    async function genToken(userId) {
-        const token = jwt.sign({id: userId}, config.secret, {
+    async function genToken(user) {
+
+        //payload es lo que contendra el token
+        let payload = {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            name: user.name,
+            rol: user.rol
+        }
+        const token = jwt.sign(payload, config.secret, {
             expiresIn: 60 * 60 * 24
         })
         
@@ -42,11 +50,11 @@ function getAuthAPI() {
     }
 
     return {
-        login,
-        register,
+        find,
         findById,
         validatePass,
-        genToken
+        genToken,
+        register
     }
 }
 
