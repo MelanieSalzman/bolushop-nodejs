@@ -1,7 +1,7 @@
-function createError(status, description) {
-    return { status: status, descripcion: description }
+function crearError(estado, motivo) {
+    return { status: estado, descripcion: motivo }
 }
 
 export {
-    createError
+    crearError
 }

@@ -35,7 +35,6 @@ function getAuthRouter() {
     router.post('/register', async (req, res) => {
 
         const userToBeRegistered = req.body
-        console.log(userToBeRegistered)
         try {
 
             const userRegistered = await authAPI.register(userToBeRegistered)
