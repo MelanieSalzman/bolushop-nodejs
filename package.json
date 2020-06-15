@@ -3,9 +3,9 @@
   "name": "bolushop-proyecto-node",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "src/main.js",
   "scripts": {
-    "dev": "server.js"
+    "start": "PORT=4000 node src/main.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,9 @@
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "express": "^4.17.1",
+    "process": "^0.11.10",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.8",
     "underscore": "^1.10.2"
   },
   "devDependencies": {
