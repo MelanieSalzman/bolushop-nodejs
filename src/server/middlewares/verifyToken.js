@@ -12,8 +12,7 @@ let adminpaths = [
 function verifyToken (req, res, next) {
 
     //Busca en la cabecera un x-access-token y lo guarda en token 
-    const token = req.headers['x-access-token']
-
+    const token = deleteBearerFromToken(req.headers['authorization'])
     //Si no habia un token en la cabecera, no le permitira entrar
     if(!token){
         return res.status(401).json({
@@ -61,6 +60,19 @@ function verifyToken (req, res, next) {
     let pathOut = '/' + arrPath
 
     return pathOut
+}
+
+function deleteBearerFromToken (header) {
+
+    let token = ''; 
+    if(header){
+    //Separa el path de entrada
+    let arrToken = header.split(' ')
+    arrToken = arrToken.splice(1,1)
+    token = arrToken.toString()
+    }
+
+    return token
 }
 
 export default verifyToken
