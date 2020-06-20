@@ -3,7 +3,7 @@ import Product from '../models/Product.js'
 
 function getProductsDAOLocal() {
 
-    async function create(ProductToBeCreated) {
+    async function create(ProductToBeCreated,userId) {
 
         const ProductCreated = new Product({
             name: ProductToBeCreated.name,
@@ -11,6 +11,8 @@ function getProductsDAOLocal() {
             description: ProductToBeCreated.description,
             details: ProductToBeCreated.details,
             web: ProductToBeCreated.web,
+            user: userId
+            
         })
 
         return ProductCreated
@@ -24,6 +26,15 @@ function getProductsDAOLocal() {
         return product
     }
 
+    async function findProductsByUser(userId) {
+
+        const product = Product.find({ user: userId })
+        return product
+
+
+    }
+
+
     async function save(product) {
        console.log('este es el producto que llega a save',product)
         product.save()
@@ -35,6 +46,8 @@ function getProductsDAOLocal() {
         const product = Product.findById(ProductId);
         return product
     }
+
+   
 
     async function replaceProduct(id, product){
 
@@ -59,6 +72,7 @@ function getProductsDAOLocal() {
         return product
     }
 
+
     return {
         create,
         findById,
@@ -66,7 +80,8 @@ function getProductsDAOLocal() {
         save,
         replaceProduct,
         deleteOne,
-        deleteAll
+        deleteAll,
+        findProductsByUser
     }
 }
 

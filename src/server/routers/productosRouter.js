@@ -1,19 +1,20 @@
 import express from 'express'
 import { getProductosApi } from '../apis/productosAPI.js'
-
+import verifyToken from '../middlewares/verifyToken.js'
 function getProductosRouter() {
 
     const router = express.Router()
 
     const productosAPI = getProductosApi()
 //crea un producto
-    router.post('/', async (req, res) => {
-        console.log('esto es lo que llega como request',req.body)
+    router.post('/', verifyToken, async (req, res) => {
+        //console.log('esto es lo que llega como request',req.body)
         const productToAdd = req.body
+        const user = req.userId
 
         try {
-            const productAdded = await productosAPI.add(productToAdd)
-            console.log('este es el producto que se agregó',productAdded)
+            const productAdded = await productosAPI.add(productToAdd,user)
+            //console.log('este es el producto que se agregó',productAdded)
             res.status(201).json(productAdded)
         } catch (err) {
             res.status(err.status).json(err)
@@ -26,7 +27,23 @@ function getProductosRouter() {
             const products = await productosAPI.findAll()
             
             res.json(products)
-            console.log('estos son todos los productos',products)
+           // console.log('estos son todos los productos',products)
+            }
+            catch {
+                return res.status(404).send('No products found')
+            }
+    })
+
+    //ver todos los productos del vendedor
+    router.get('/myProducts', verifyToken, async (req, res) => {
+
+        try{
+            const user = req.userId
+            console.log('este es mi usuario que llega',user) 
+            const products = await productosAPI.findProductsByUserId(user)
+            
+            res.json(products)
+            console.log('estos son todos los productos del vendedor',products)
             }
             catch {
                 return res.status(404).send('No products found')
@@ -55,15 +72,16 @@ function getProductosRouter() {
 
     })
 //modificar un producto por id
-    router.put('/:id', async (req, res) => {
+    router.put('/:id', verifyToken, async (req, res) => {
 
         const productToReplace = req.body
-        console.log('este es el producto que quiero reemplazar', productToReplace)
+        
+        //console.log('este es el producto que quiero reemplazar', productToReplace)
         try {
             let productReplaced = await productosAPI.replaceProduct(req.params.id, productToReplace)
            
             res.status(200).json(productReplaced)
-            console.log('este es el producto reemplazadao', productReplaced)
+           // console.log('este es el producto reemplazadao', productReplaced)
         } catch (err) {
             res.status(404).send('Cannot update')
         }

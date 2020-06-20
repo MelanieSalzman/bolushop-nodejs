@@ -28,11 +28,11 @@ const productSchema = new Schema({
         
     },
 
-   /* Referencia a los usuarios
-    products: [{
+   // Referencia a los usuarios
+    user: [{
         type: Schema.Types.ObjectId,
-        ref: 'user'
-    }]*/
+        ref: 'User'
+    }]
 });
 
 

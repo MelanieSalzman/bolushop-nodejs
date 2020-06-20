@@ -5,9 +5,9 @@ import { crearError } from '../errores/errores.js'
 function getProductosApi() {
     const productosDAO = getProductsDAO()
 
-    async function add(produParaAgregar) {
+    async function add(produParaAgregar,user) {
       //  asegurarProductoValido(produParaAgregar)
-        const produAgregado = await productosDAO.create(produParaAgregar)
+        const produAgregado = await productosDAO.create(produParaAgregar,user)
         console.log('este es el producto creado',produAgregado)
 
         await productosDAO.save(produAgregado)
@@ -48,10 +48,17 @@ function getProductosApi() {
      }
 
    
-    async function findAll() {
+     async function findAll() {
         const productos = await productosDAO.findAll()
         return productos
     }
+
+    async function findProductsByUserId(user) {
+        const productos = await productosDAO.findProductsByUser(user)
+        return productos
+    }
+
+
 
    /* function asegurarProductoValido(producto) {
         try {
@@ -68,7 +75,8 @@ function getProductosApi() {
         deleteOne,
         deleteAll,
         buscar,
-        replaceProduct
+        replaceProduct,
+        findProductsByUserId
     }
 }
 
