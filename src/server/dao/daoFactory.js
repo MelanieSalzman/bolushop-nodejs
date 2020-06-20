@@ -1,15 +1,15 @@
 import { getUsersDAOLocal } from './daoUsers.js'
-import { getProductosDaoRam } from './daoProductosArray.js'
+import { getProductsDAOLocal } from './daoProducts.js'
 
 function getUsersDAO() {
     return getUsersDAOLocal()
 }
 
-function getProductosDAO() {
-    return getProductosDaoRam()
+function getProductsDAO() {
+    return getProductsDAOLocal()
 }
 
 export {
     getUsersDAO,
-    getProductosDAO
+    getProductsDAO
 }

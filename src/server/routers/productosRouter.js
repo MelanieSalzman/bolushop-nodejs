@@ -6,61 +6,92 @@ function getProductosRouter() {
     const router = express.Router()
 
     const productosAPI = getProductosApi()
-
+//crea un producto
     router.post('/', async (req, res) => {
-
-        const produParaAgregar = req.body
+        console.log('esto es lo que llega como request',req.body)
+        const productToAdd = req.body
 
         try {
-            const produAgregado = await productosAPI.agregar(produParaAgregar)
-            res.status(201).json(produAgregado)
+            const productAdded = await productosAPI.add(productToAdd)
+            console.log('este es el producto que se agregó',productAdded)
+            res.status(201).json(productAdded)
         } catch (err) {
             res.status(err.status).json(err)
         }
     })
-
+//ver todos los productos
     router.get('/', async (req, res) => {
 
-        try {
-            const queryParams = new Map(Object.entries(req.query))
-            const productos = await productosAPI.buscar(queryParams)
-            res.json(productos)
-        } catch (err) {
-            res.status(err.status).json(err)
-        }
+        try{
+            const products = await productosAPI.findAll()
+            
+            res.json(products)
+            console.log('estos son todos los productos',products)
+            }
+            catch {
+                return res.status(404).send('No products found')
+            }
     })
-
+//eliminar por id
     router.delete('/:id', async (req, res) => {
 
         try {
-            await productosAPI.borrar(req.params.id)
-            res.status(204).send()
+            await productosAPI.deleteOne(req.params.id)
+            res.status(204).send('Product deleted')
         } catch (err) {
-            res.status(err.status).json(err)
+            res.status(404).send('Cannot delete')
         }
 
     })
-
+//Borrar todos los productos
     router.delete('/', async (req, res) => {
 
         try {
-            await productosAPI.borrarTodos()
-            res.status(204).send()
+            await productosAPI.deleteAll()
+            res.status(204).send('All products deleted')
         } catch (err) {
-            res.status(err.status).json(err)
+            res.status(404).send('Cannot delete')
         }
 
     })
-
+//modificar un producto por id
     router.put('/:id', async (req, res) => {
 
-        const produParaReemplazar = req.body
+        const productToReplace = req.body
+        console.log('este es el producto que quiero reemplazar', productToReplace)
         try {
-            const produReemplazado = await productosAPI.reemplazar(req.params.id, produParaReemplazar)
-            res.json(produReemplazado)
+            let productReplaced = await productosAPI.replaceProduct(req.params.id, productToReplace)
+           
+            res.status(200).json(productReplaced)
+            console.log('este es el producto reemplazadao', productReplaced)
         } catch (err) {
-            res.status(err.status).json(err)
+            res.status(404).send('Cannot update')
         }
+    })
+
+    //actualizar campos de  un producto por id
+    router.patch('/:id', async (req, res) => {
+
+        const productToReplace = req.body
+        try {
+            let productReplaced = await productosAPI.replaceProduct(req.params.id, productToReplace)
+           
+            res.status(200).json(productReplaced)
+        } catch (err) {
+            res.status(404).send('Cannot update')
+        }
+    })
+
+     //Para ver un producto por id
+     router.get('/id', async (req, res) => {
+
+        try {
+            const product = await productosAPI.findById(req.params.id)
+            res.status(200).json(product)
+        } catch (err) {
+            res.status(404).send('No product found')
+        }
+
     })
 
     return router

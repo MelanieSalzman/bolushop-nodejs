@@ -1,14 +1,19 @@
-import { getProductosDAO } from '../dao/daoFactory.js'
+import { getProductsDAO } from '../dao/daoFactory.js'
 import { validarProducto } from '../validaciones/productos.js'
 import { crearError } from '../errores/errores.js'
 
 function getProductosApi() {
-    const productosDAO = getProductosDAO()
+    const productosDAO = getProductsDAO()
 
-    async function agregar(produParaAgregar) {
+    async function add(produParaAgregar) {
       //  asegurarProductoValido(produParaAgregar)
-        const produAgregado = await productosDAO.add(produParaAgregar)
+        const produAgregado = await productosDAO.create(produParaAgregar)
+        console.log('este es el producto creado',produAgregado)
+
+        await productosDAO.save(produAgregado)
+        console.log('pasó por el save')
         return produAgregado
+    
     }
 
     async function buscar(queryParams) {
@@ -23,25 +28,29 @@ function getProductosApi() {
         return result
     }
 
-    async function borrar(id) {
-        await productosDAO.deleteById(id)
+
+    async function deleteOne(id) {
+        await productosDAO.deleteOne(id)
     }
 
-    async function borrarTodos() {
+
+    async function deleteAll() {
         await productosDAO.deleteAll()
     }
 
-    async function reemplazar(id, produParaReemplazar) {
-        //asegurarProductoValido(produParaReemplazar)
-        asegurarQueCoincidenLosIds(produParaReemplazar.id, id)
-        const produReemplazado = await productosDAO.updateById(id, produParaReemplazar)
-        return produReemplazado
-    }
+//reemplaza un producto
+    async function replaceProduct(id, producto) {
+    
+        let productCreated = await productosDAO.create(producto)
+        
+         let productReplaced = await productosDAO.replaceProduct(id, productCreated)
+         return productReplaced
+     }
 
-    function asegurarQueCoincidenLosIds(id1, id2) {
-        if (id1 != id2) {
-            throw crearError(400, 'no coinciden los ids enviados')
-        }
+   
+    async function findAll() {
+        const productos = await productosDAO.findAll()
+        return productos
     }
 
    /* function asegurarProductoValido(producto) {
@@ -54,11 +63,12 @@ function getProductosApi() {
     */
 
     return {
-        agregar,
+        add,
+        findAll,
+        deleteOne,
+        deleteAll,
         buscar,
-        borrar,
-        borrarTodos,
-        reemplazar
+        replaceProduct
     }
 }
 
