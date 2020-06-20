@@ -41,11 +41,12 @@ const userSchema = new Schema({
             'admin'
         ]
     },
-   /* Referencia a los productos
-    products: [{
+    //Referencia a los productos
+   /* products: [{
         type: Schema.Types.ObjectId,
-        ref: 'product'
-    }]*/
+        ref: 'Product'
+    }]
+    */
 });
 
 
