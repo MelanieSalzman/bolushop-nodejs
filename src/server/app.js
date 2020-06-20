@@ -1,17 +1,27 @@
-import express from 'express'
+import express from 'express';
+import cors from 'cors';
+import getUsersRouter from './routers/userRouter.js'
+import getAuthRouter from './routers/authRouter.js'
+import getProductosRouter from './routers/productosRouter.js'
 
-import { getProductosRouter } from './routers/productosRouter.js'
+function createApp() {
+//Genera un nueva instancia de servidor
+const app = express();
 
-function crearApp() {
+app.use(cors());
+//Con esta instruccion le permite al servidor entender los archivos JSON
+//Cuando se le envie un JSON al servidor lo convertira a un objeto Javascript
+//Le permite ver el req.body
+app.use(express.json());
 
-    const app = express()
+//Con esta instruccion entiende los objetos que le llegan por formulario y lo convierte en un objeto javascript
+app.use(express.urlencoded({extended: false}));
 
-    app.use(express.json())
-    app.set('json spaces', 4)
-
-    app.use('/api/productos', getProductosRouter())
-
-    return app
+//app.use(authController)
+app.use('/api/users', getUsersRouter())
+app.use('/api/auth', getAuthRouter())
+app.use('/api/productos', getProductosRouter())
+return app
 }
 
-export default crearApp
+export default createApp

@@ -1,10 +1,14 @@
-import crearServidor from './server/app.js'
+import config from './config.js'
+import './database.js'
+import createServer from './server/app.js'
 
-const app = crearServidor()
+const app = createServer()
 
-const PORT = 4000
-
-const server = app.listen(PORT, () => {
-    // eslint-disable-next-line no-console
-    console.log(`listening on port ${server.address().port}`)
-})
+    //El servidor se pone a escuchar en el puerto 3000
+   const server = app.listen(config.port, error => {
+       
+        if(error) throw new Error('Error en servidor:', error)
+   
+        console.log(`listening on port ${server.address().port}`)
+    });
+    
