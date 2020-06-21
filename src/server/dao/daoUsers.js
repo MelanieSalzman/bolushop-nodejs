@@ -7,7 +7,7 @@ function getUsersDAOLocal() {
 
         const UserCreated = new User({
             name: UserToBeCreated.name,
-           // username: UserToBeCreated.username,
+            username: UserToBeCreated.username,
             email: UserToBeCreated.email,
             password: UserToBeCreated.password,
             rol: UserToBeCreated.rol
@@ -19,6 +19,12 @@ function getUsersDAOLocal() {
     async function findByEmail(email) {
 
         const user = User.findOne({email: email}, { password: 0 });
+        return user
+    }
+
+    async function findByUserName(username) {
+
+        const user = User.findOne({username: username}, { password: 0 });
         return user
     }
 
@@ -80,6 +86,7 @@ function getUsersDAOLocal() {
     return {
         create,
         findByEmail,
+        findByUserName,
         findByEmailWithPass,
         findById,
         findAll,

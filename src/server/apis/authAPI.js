@@ -18,7 +18,7 @@ function getAuthAPI() {
         UserCreated = await usersDAO.encryptPassword(UserCreated)
         //user.save() para guardar en la bd
         await usersDAO.save(UserCreated)
-        
+
         return UserCreated
     }
 
@@ -27,9 +27,35 @@ function getAuthAPI() {
         return user
     }
 
-    async function validatePass(user,UserToBeLogged) {
-        const validPassword = await usersDAO.validatePassword(user,UserToBeLogged.password)
+    async function validatePass(user, UserToBeLogged) {
+        const validPassword = await usersDAO.validatePassword(user, UserToBeLogged.password)
         return validPassword
+    }
+
+    async function findByEmail(user) {
+        let exist = false
+        const userFounded = await usersDAO.findByEmail(user.email)
+
+        if (userFounded != null) {
+            exist = true
+
+        }
+
+        return exist
+    
+    }
+
+    async function findByUserName(user) {
+        let exist = false
+        const userFounded = await usersDAO.findByUserName(user.username)
+
+        if (userFounded != null) {
+            exist = true
+
+        }
+
+        return exist
+    
     }
 
     async function genToken(user) {
@@ -45,16 +71,18 @@ function getAuthAPI() {
         const token = jwt.sign(payload, config.secret, {
             expiresIn: 60 * 60 * 24
         })
-        
+
         return token
     }
 
     return {
         find,
         findById,
+        findByEmail,
         validatePass,
         genToken,
-        register
+        register,
+        findByUserName
     }
 }
 

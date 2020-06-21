@@ -21,6 +21,8 @@ function getUsersApi() {
         return user
     }
 
+    
+
     async function add(userToAdd) {
         //isUserValid(userToAdd)
         let UserCreated = await usersDAO.create(userToAdd)

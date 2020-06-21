@@ -16,7 +16,7 @@ function getAuthRouter() {
 
         try {
             const user = await authAPI.find(userToBeLogged)
-            const validPassword = await authAPI.validatePass(user,userToBeLogged)
+            const validPassword = await authAPI.validatePass(user, userToBeLogged)
 
             if (!validPassword) {
                 return res.status(401).json({ auth: false, token: null })
@@ -34,16 +34,35 @@ function getAuthRouter() {
     //Ruta post para registrarse
     router.post('/register', async (req, res) => {
 
+
         const userToBeRegistered = req.body
+        
         try {
 
-            const userRegistered = await authAPI.register(userToBeRegistered)
-            
-            const token = await authAPI.genToken(userRegistered)
+            const userExist = await authAPI.findByEmail(userToBeRegistered)
+            console.log('userExist',userExist)
 
+            if (userExist) {
+                res.status(404).send('Email already exists')
 
-            //Trata lo que envia como un objeto
-            res.json({ auth: true, token: token })
+            } else {
+
+                const userNameExist = await authAPI.findByUserName(userToBeRegistered)
+                console.log('userNameExist',userNameExist)
+                if (userNameExist) {
+                    res.status(404).send('Usarname already exists')
+                    //console.log('userNameExist',userNameExist)
+
+                } else {
+                    const userRegistered = await authAPI.register(userToBeRegistered)
+                    const token = await authAPI.genToken(userRegistered)
+
+                    //Trata lo que envia como un objeto
+                    res.json({ auth: true, token: token })
+                }
+
+            }
+
         } catch (err) {
             res.status(404).send('Cannot register user')
         }
@@ -55,16 +74,16 @@ function getAuthRouter() {
     //con verifytoken protejo la ruta de que alguien ingrese sin token
     router.get('/profile', verifyToken, async (req, res) => {
 
-        try{
-        const user = await authAPI.findById(req.userId)
-        res.json(user)
+        try {
+            const user = await authAPI.findById(req.userId)
+            res.json(user)
         }
         catch {
             return res.status(404).send('No user found')
         }
 
         //Trata lo que envia como un objeto
-        
+
     })
 
     return router
