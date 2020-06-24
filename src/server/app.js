@@ -3,6 +3,7 @@ import cors from 'cors';
 import getUsersRouter from './routers/userRouter.js'
 import getAuthRouter from './routers/authRouter.js'
 import getProductosRouter from './routers/productosRouter.js'
+import getMailRouter from './routers/mailRouter.js';
 
 function createApp() {
 //Genera un nueva instancia de servidor
@@ -21,6 +22,7 @@ app.use(express.urlencoded({extended: false}));
 app.use('/api/users', getUsersRouter())
 app.use('/api/auth', getAuthRouter())
 app.use('/api/productos', getProductosRouter())
+app.use('/api/email',getMailRouter())
 return app
 }
 

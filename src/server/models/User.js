@@ -41,6 +41,10 @@ const userSchema = new Schema({
             'admin'
         ]
     },
+    resetPasswordToken: {
+        type: String,
+        default: ''
+    }
     //Referencia a los productos
    /* products: [{
         type: Schema.Types.ObjectId,
