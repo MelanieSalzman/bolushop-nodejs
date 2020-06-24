@@ -47,11 +47,17 @@ function getUsersRouter() {
     })
 
     //Para reemplazar un usuario completo
-    router.put('/update/:id', verifyToken, async (req, res) => {
+    router.put('/update', verifyToken, async (req, res) => {
+
+        console.log("estos datos llegan en el id", req.userId)
+        console.log("estos datos llegan en el body", req.body)
 
         const userToReplace = req.body
+        const userId = req.userId
+        
+        
         try {
-            let userReplaced = await usersAPI.replaceUser(req.params.id, userToReplace)
+            let userReplaced = await usersAPI.replaceUser(userId, userToReplace)
            
             res.status(200).json(userReplaced)
         } catch (err) {
@@ -63,8 +69,9 @@ function getUsersRouter() {
     router.patch('/update/:id', verifyToken, async (req, res) => {
 
         const userToReplace = req.body
+        const userId = req.userId
         try {
-            let userReplaced = await usersAPI.replaceUser(req.params.id, userToReplace)
+            let userReplaced = await usersAPI.replaceUser(userId, userToReplace)
            
             res.status(200).json(userReplaced)
         } catch (err) {

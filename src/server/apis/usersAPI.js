@@ -31,14 +31,21 @@ function getUsersApi() {
         return UserCreated
     }
     
-    async function replaceUser(id, user) {
+    async function updateUser(id, user) {
        // isUserValid(userToReplace)
        // areIdsEqual(userToReplace.id, id)
+       let updated = false
+       let userfounded = await usersDAO.findById(id)
+
+       if(userfounded){
        let UserCreated = await usersDAO.create(user)
        let userToReplace = await usersDAO.encryptPassword(UserCreated)
-       
-        let userReplaced = await usersDAO.replaceUser(id, userToReplace)
-        return userReplaced
+       await usersDAO.replaceUser(id, userToReplace)
+
+       updated=true
+        
+       }
+       return updated
     }
 
     async function deleteOne(id) {
@@ -71,7 +78,7 @@ function getUsersApi() {
         find,
         findAll,
         findById,
-        replaceUser,
+        updateUser,
         deleteOne,
         deleteAll
     }

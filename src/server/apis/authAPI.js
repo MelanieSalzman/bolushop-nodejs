@@ -27,8 +27,8 @@ function getAuthAPI() {
         return user
     }
 
-    async function validatePass(user, UserToBeLogged) {
-        const validPassword = await usersDAO.validatePassword(user, UserToBeLogged.password)
+    async function validatePass(user, password) {
+        const validPassword = await usersDAO.validatePassword(user, password)
         return validPassword
     }
 
@@ -75,6 +75,16 @@ function getAuthAPI() {
         return token
     }
 
+    async function replacePassword(userToBeUpdated,newpassword) {
+
+        let userUpdated = await usersDAO.changePassword(userToBeUpdated,newpassword)
+        userUpdated = await usersDAO.encryptPassword(userUpdated)
+        //user.save() para guardar en la bd
+        await usersDAO.replaceUser(userUpdated._id,userUpdated)
+
+        return userUpdated
+    }
+
     return {
         find,
         findById,
@@ -82,7 +92,8 @@ function getAuthAPI() {
         validatePass,
         genToken,
         register,
-        findByUserName
+        findByUserName,
+        replacePassword
     }
 }
 

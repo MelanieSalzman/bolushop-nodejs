@@ -11,6 +11,8 @@ function getProductosRouter() {
         //console.log('esto es lo que llega como request',req.body)
         const productToAdd = req.body
         const user = req.userId
+        console.log('productToAdd', req.body)
+        console.log('user', req.userId)
 
         try {
             const productAdded = await productosAPI.add(productToAdd, user)

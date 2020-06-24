@@ -65,7 +65,7 @@ function getProductosApi() {
         let verified = false
         const product = await productosDAO.findById(productId)
       
-        if ((product.user[0]) == user) {
+        if ((product.user) == user) {
             verified = true
           
         }

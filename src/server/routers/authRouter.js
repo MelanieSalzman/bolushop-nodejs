@@ -16,7 +16,7 @@ function getAuthRouter() {
 
         try {
             const user = await authAPI.find(userToBeLogged)
-            const validPassword = await authAPI.validatePass(user, userToBeLogged)
+            const validPassword = await authAPI.validatePass(user, userToBeLogged.password)
 
             if (!validPassword) {
                 return res.status(401).json({ auth: false, token: null })
@@ -77,6 +77,38 @@ function getAuthRouter() {
         try {
             const user = await authAPI.findById(req.userId)
             res.json(user)
+        }
+        catch {
+            return res.status(404).send('No user found')
+        }
+
+        //Trata lo que envia como un objeto
+
+    })
+
+    router.get('/ChangePassword', verifyToken, async (req, res) => {
+
+        const password = req.body.password
+        const newPassword = req.body.newPassword
+        const user = req.userId
+
+        try {
+            const dbuser = await authAPI.findById(user)
+
+            const validPassword = await authAPI.validatePass(dbuser, password)
+
+            if (!validPassword) {
+                return res.status(401).json({ auth: false, token: null })
+            } 
+            else{
+            const userUpdated = await authAPI.replacePassword(dbuser,newPassword)
+
+            const token = await authAPI.genToken(userUpdated)
+
+            //Trata lo que envia como un objeto
+            res.json({ auth: true, token: token })
+            }
+
         }
         catch {
             return res.status(404).send('No user found')

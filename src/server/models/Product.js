@@ -29,10 +29,10 @@ const productSchema = new Schema({
     },
 
    // Referencia a los usuarios
-    user: [{
+    user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }]
+    }
 });
 
 

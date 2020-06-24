@@ -16,6 +16,19 @@ function getUsersDAOLocal() {
         return UserCreated
     }
     
+    async function changePass(userToBeUpdated,newPassword) {
+
+        const UserCreated = new User({
+            name: userToBeUpdated.name,
+            username: userToBeUpdated.username,
+            email: userToBeUpdated.email,
+            password: newPassword,
+            rol: userToBeUpdated.rol
+        })
+
+        return UserCreated
+    }
+
     async function findByEmail(email) {
 
         const user = User.findOne({email: email}, { password: 0 });
@@ -65,7 +78,7 @@ function getUsersDAOLocal() {
 
         const userReplaced = User.findOneAndUpdate({_id: id}, {
             name: user.name,
-         //   username: UserToBeCreated.username,
+            username: user.username,
             email: user.email,
             password: user.password,
             rol: user.rol
@@ -95,7 +108,8 @@ function getUsersDAOLocal() {
         save,
         replaceUser,
         deleteOne,
-        deleteAll
+        deleteAll,
+        changePass
     }
 }
 
