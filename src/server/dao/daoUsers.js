@@ -74,6 +74,12 @@ function getUsersDAOLocal() {
         return user
     }
 
+    async function findByIdWithPass(UserId) {
+
+        const user = User.findById(UserId);
+        return user
+    }
+
     async function replaceUser(id, user){
 
         const userReplaced = User.findOneAndUpdate({_id: id}, {
@@ -84,6 +90,13 @@ function getUsersDAOLocal() {
             rol: user.rol
         });
         return userReplaced
+    }
+
+    async function updateTokenFromUser(id,token){
+        const userUpdated = User.findOneAndUpdate({_id:id},{
+            resetPasswordToken: token
+        });
+        return userUpdated
     }
 
     async function deleteOne(id){
@@ -109,7 +122,9 @@ function getUsersDAOLocal() {
         replaceUser,
         deleteOne,
         deleteAll,
-        changePass
+        changePass,
+        updateTokenFromUser,
+        findByIdWithPass
     }
 }
 

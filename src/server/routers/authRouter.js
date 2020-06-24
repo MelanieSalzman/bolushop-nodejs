@@ -86,17 +86,16 @@ function getAuthRouter() {
 
     })
 
-    router.get('/ChangePassword', verifyToken, async (req, res) => {
+    router.get('/changepassword', verifyToken, async (req, res) => {
 
         const password = req.body.password
         const newPassword = req.body.newPassword
         const user = req.userId
 
         try {
-            const dbuser = await authAPI.findById(user)
-
+            const dbuser = await authAPI.findByIdWithPass(user)
+            
             const validPassword = await authAPI.validatePass(dbuser, password)
-
             if (!validPassword) {
                 return res.status(401).json({ auth: false, token: null })
             } 

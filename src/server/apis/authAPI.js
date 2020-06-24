@@ -26,6 +26,10 @@ function getAuthAPI() {
         const user = await usersDAO.findById(UserId)
         return user
     }
+    async function findByIdWithPass(UserId) {
+        const user = await usersDAO.findByIdWithPass(UserId)
+        return user
+    }
 
     async function validatePass(user, password) {
         const validPassword = await usersDAO.validatePassword(user, password)
@@ -93,7 +97,8 @@ function getAuthAPI() {
         genToken,
         register,
         findByUserName,
-        replacePassword
+        replacePassword,
+        findByIdWithPass
     }
 }
 
