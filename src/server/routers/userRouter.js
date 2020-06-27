@@ -1,10 +1,10 @@
-import express from 'express'
+import Router from 'express'
 import verifyToken from '../middlewares/verifyToken.js'
 import { getUsersApi } from '../apis/usersAPI.js'
 
 function getUsersRouter() {
 
-    const router = express.Router()
+    const router = Router()
 
     const usersAPI = getUsersApi()
 
@@ -47,7 +47,7 @@ function getUsersRouter() {
     })
 
     //Para reemplazar un usuario completo
-    router.put('/update', verifyToken, async (req, res) => {
+    router.post('/update', verifyToken, async (req, res) => {
 
         console.log("estos datos llegan en el id", req.userId)
         console.log("estos datos llegan en el body", req.body)
@@ -57,14 +57,14 @@ function getUsersRouter() {
         
         
         try {
-            let userReplaced = await usersAPI.replaceUser(userId, userToReplace)
+            let userReplaced = await usersAPI.updateUser(userId, userToReplace)
            
             res.status(200).json(userReplaced)
         } catch (err) {
             res.status(404).send('Cannot update')
         }
     })
-
+/*
     //Para actualizar campos de un usuario
     router.patch('/update/:id', verifyToken, async (req, res) => {
 
@@ -77,7 +77,7 @@ function getUsersRouter() {
         } catch (err) {
             res.status(404).send('Cannot update')
         }
-    })
+    })*/
 
     //Borrar un usuario
     router.delete('/delete/:id', verifyToken, async (req, res) => {
@@ -106,4 +106,4 @@ function getUsersRouter() {
 
     return router
 }
-export default getUsersRouter
+export { getUsersRouter }

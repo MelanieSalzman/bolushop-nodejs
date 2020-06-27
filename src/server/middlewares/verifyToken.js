@@ -5,12 +5,12 @@ let adminpaths = [
     '/index',
     '/create',
     '/show',
-    '/update',
     '/delete'
 ]
 
 function verifyToken (req, res, next) {
-
+    
+    console.log("paso por aca")
     //Busca en la cabecera un x-access-token y lo guarda en token 
     const token = deleteBearerFromToken(req.headers['authorization'])
     //Si no habia un token en la cabecera, no le permitira entrar
@@ -43,7 +43,6 @@ function verifyToken (req, res, next) {
             }
         }
     }
-
     req.userId = decoded.id
     next()
 }

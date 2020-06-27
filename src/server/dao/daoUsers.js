@@ -15,6 +15,17 @@ function getUsersDAOLocal() {
 
         return UserCreated
     }
+
+    async function createWithoutPass(UserToBeCreated) {
+
+        const UserCreated = new User({
+            name: UserToBeCreated.name,
+            username: UserToBeCreated.username,
+            email: UserToBeCreated.email
+        })
+
+        return UserCreated
+    }
     
     async function changePass(userToBeUpdated,newPassword) {
 
@@ -81,14 +92,23 @@ function getUsersDAOLocal() {
     }
 
     async function replaceUser(id, user){
-
-        const userReplaced = User.findOneAndUpdate({_id: id}, {
+        let userReplaced = User.findOneAndUpdate({_id: id}, {
             name: user.name,
             username: user.username,
             email: user.email,
             password: user.password,
             rol: user.rol
-        });
+        },{new: true});
+        console.log(userReplaced)
+        return userReplaced
+    }
+
+    async function replaceUserWithoutPass(id, user){
+        let userReplaced = User.findOneAndUpdate({_id: id}, {
+            name: user.name,
+            username: user.username,
+            email: user.email
+        },{new: true});
         return userReplaced
     }
 
@@ -124,7 +144,9 @@ function getUsersDAOLocal() {
         deleteAll,
         changePass,
         updateTokenFromUser,
-        findByIdWithPass
+        findByIdWithPass,
+        replaceUserWithoutPass,
+        createWithoutPass
     }
 }
 
