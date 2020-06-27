@@ -30,7 +30,7 @@ function getUsersApi() {
         await usersDAO.save(UserCreated)
         return UserCreated
     }
-    
+  /*  
     async function updateUser(id, user) {
        // isUserValid(userToReplace)
        // areIdsEqual(userToReplace.id, id)
@@ -47,6 +47,23 @@ function getUsersApi() {
        }
        return updated
     }
+*/
+    async function updateUser(id, user) {
+        // isUserValid(userToReplace)
+        // areIdsEqual(userToReplace.id, id)
+        let updated = false
+        let userfounded = await usersDAO.findById(id)
+        console.log("usuario encontrado",userfounded)
+        if(userfounded){
+        let userCreated = await usersDAO.createWithoutPass(user)
+        console.log("usuario creado",userCreated)
+        await usersDAO.replaceUserWithoutPass(id, userCreated)
+ 
+        updated=true
+         
+        }
+        return updated
+     }
 
     async function deleteOne(id) {
         await usersDAO.deleteOne(id)

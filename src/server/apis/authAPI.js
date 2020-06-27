@@ -63,7 +63,7 @@ function getAuthAPI() {
     }
 
     async function genToken(user) {
-
+        
         //payload es lo que contendra el token
         let payload = {
             id: user._id,
@@ -75,17 +75,17 @@ function getAuthAPI() {
         const token = jwt.sign(payload, config.secret, {
             expiresIn: 60 * 60 * 24
         })
+        
 
         return token
     }
 
     async function replacePassword(userToBeUpdated,newpassword) {
 
-        let userUpdated = await usersDAO.changePassword(userToBeUpdated,newpassword)
+        let userUpdated = await usersDAO.changePass(userToBeUpdated,newpassword)
         userUpdated = await usersDAO.encryptPassword(userUpdated)
         //user.save() para guardar en la bd
-        await usersDAO.replaceUser(userUpdated._id,userUpdated)
-
+        userUpdated = await usersDAO.replaceUser(userToBeUpdated._id,userUpdated)
         return userUpdated
     }
 

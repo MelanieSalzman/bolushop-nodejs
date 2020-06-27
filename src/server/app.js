@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import getUsersRouter from './routers/userRouter.js'
+import {getUsersRouter} from './routers/userRouter.js'
 import getAuthRouter from './routers/authRouter.js'
 import getProductosRouter from './routers/productosRouter.js'
 import getMailRouter from './routers/mailRouter.js';

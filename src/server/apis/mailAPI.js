@@ -10,7 +10,7 @@ function getMailAPI() {
     async function forgotPassword(email) {
         const user= await find(email)
         if(user!=null){
-        const token = await genToken(email)
+        const token = await genToken(email) 
         const userUpdated = await updateTokenFromUser(user,token)
         await sendEmail(token)
         }
