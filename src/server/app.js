@@ -4,6 +4,7 @@ import {getUsersRouter} from './routers/userRouter.js'
 import getAuthRouter from './routers/authRouter.js'
 import getProductosRouter from './routers/productosRouter.js'
 import getMailRouter from './routers/mailRouter.js';
+import getWppRouter from './routers/wppRouter.js'
 
 function createApp() {
 //Genera un nueva instancia de servidor
@@ -23,6 +24,7 @@ app.use('/api/users', getUsersRouter())
 app.use('/api/auth', getAuthRouter())
 app.use('/api/productos', getProductosRouter())
 app.use('/api/email',getMailRouter())
+app.use('/api/whatssapp', getWppRouter())
 return app
 }
 
