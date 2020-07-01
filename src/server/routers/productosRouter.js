@@ -1,6 +1,7 @@
 import express from 'express'
 import { getProductosApi } from '../apis/productosAPI.js'
 import verifyToken from '../middlewares/verifyToken.js'
+
 function getProductosRouter() {
 
     const router = express.Router()
@@ -36,6 +37,20 @@ function getProductosRouter() {
         }
     })
 
+    router.get('/sortedByRating', async (req, res) => {
+
+        try {
+            const products = await productosAPI.findAllByRating()
+
+            res.json(products)
+        console.log('estos son todos los productos que me llegan en rating',products)
+        }
+        catch {
+            return res.status(404).send('No products found')
+        }
+    })
+
+
     //ver todos los productos del vendedor
     router.get('/myProducts', verifyToken, async (req, res) => {
 
@@ -51,6 +66,9 @@ function getProductosRouter() {
             return res.status(404).send('No products found')
         }
     })
+
+
+
     //eliminar por id
     router.delete('/:id', verifyToken, async (req, res) => {
 
@@ -138,7 +156,22 @@ function getProductosRouter() {
 
     })
     */
+   router.post('/rating/:id', verifyToken, async (req, res) => {
+      
+    const rating = req.body.rating
+  console.log(rating)
+    console.log('este es el rating que me llega en el body', rating)
+
+    try {
+        const ratingAdded = await productosAPI.rate(rating, req.params.id)
+        res.status(201).json(ratingAdded)
+    } catch (err) {
+        res.status(err.status).json(err)
+    }
+})
+
 
     return router
 }
 export default getProductosRouter
+

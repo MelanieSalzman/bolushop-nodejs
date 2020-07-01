@@ -3,7 +3,7 @@ import Product from '../models/Product.js'
 
 function getProductsDAOLocal() {
 
-    async function create(ProductToBeCreated,userId) {
+    async function create(ProductToBeCreated, userId) {
 
         const ProductCreated = new Product({
             name: ProductToBeCreated.name,
@@ -11,18 +11,25 @@ function getProductsDAOLocal() {
             description: ProductToBeCreated.description,
             details: ProductToBeCreated.details,
             web: ProductToBeCreated.web,
-            user: userId
-            
+            user: userId,
+            rating: ProductToBeCreated.rating
+
         })
 
         return ProductCreated
-    }   
+    }
 
-  
+
 
     async function findAll() {
 
         const product = Product.find({});
+        return product
+    }
+
+
+    async function sortedByRating() {
+        const product = Product.find({}).sort({rating:-1})
         return product
     }
 
@@ -36,40 +43,51 @@ function getProductsDAOLocal() {
 
 
     async function save(product) {
-       console.log('este es el producto que llega a save',product)
+        console.log('este es el producto que llega a save', product)
         product.save()
     }
 
-    
-     async function findById(ProductId) {
+
+    async function findById(ProductId) {
 
         const product = Product.findById(ProductId);
         return product
     }
 
-   
 
-    async function replaceProduct(id, product){
 
-        const productReplaced = Product.findOneAndUpdate({_id: id}, {
+    async function replaceProduct(id, product) {
+
+        const productReplaced = Product.findOneAndUpdate({ _id: id }, {
             name: product.name,
             price: product.price,
             description: product.description,
             details: product.details,
             web: product.web,
+            rating: product.rating
+
         });
         return productReplaced
     }
 
 
-    async function deleteOne(id){
-        const product = Product.findOneAndDelete({_id: id});
+    async function deleteOne(id) {
+        const product = Product.findOneAndDelete({ _id: id });
         return product
     }
 
-    async function deleteAll(){
+    async function deleteAll() {
         const product = Product.deleteMany({})
         return product
+    }
+
+    async function addPositive(id) {
+
+        const product = Product.findByIdAndUpdate({ _id: id }, { $inc: { rating: 1 } });
+
+
+        return product
+
     }
 
 
@@ -81,7 +99,9 @@ function getProductsDAOLocal() {
         replaceProduct,
         deleteOne,
         deleteAll,
-        findProductsByUser
+        findProductsByUser,
+        addPositive,
+        sortedByRating
     }
 }
 

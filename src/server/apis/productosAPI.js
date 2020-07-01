@@ -56,6 +56,12 @@ function getProductosApi() {
         return productos
     }
 
+    async function findAllByRating() {
+        const productos = await productosDAO.sortedByRating()
+        return productos
+    }
+
+
     async function findProductsByUserId(user) {
         const productos = await productosDAO.findProductsByUser(user)
         return productos
@@ -72,7 +78,17 @@ function getProductosApi() {
        
         return verified
 
+       
+    }
 
+    async function rate(rating, idProduct){
+        const product = await productosDAO.findById(idProduct)
+
+        if(product){
+            if(rating){
+             const added = await productosDAO.addPositive(idProduct)
+            }
+        }
     }
 
     /* function asegurarProductoValido(producto) {
@@ -93,7 +109,9 @@ function getProductosApi() {
         buscar,
         replaceProduct,
         findProductsByUserId,
-        verifyUserOfProduct
+        verifyUserOfProduct,
+        rate,
+        findAllByRating
     }
 }
 
