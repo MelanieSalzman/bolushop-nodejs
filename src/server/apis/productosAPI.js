@@ -56,6 +56,12 @@ function getProductosApi() {
         return productos
     }
 
+    async function findAllByRating() {
+        const productos = await productosDAO.sortedByRating()
+        return productos
+    }
+
+
     async function findProductsByUserId(user) {
         const productos = await productosDAO.findProductsByUser(user)
         return productos
@@ -104,7 +110,8 @@ function getProductosApi() {
         replaceProduct,
         findProductsByUserId,
         verifyUserOfProduct,
-        rate
+        rate,
+        findAllByRating
     }
 }
 
