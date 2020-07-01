@@ -99,7 +99,6 @@ function getUsersDAOLocal() {
             password: user.password,
             rol: user.rol
         },{new: true});
-        console.log(userReplaced)
         return userReplaced
     }
 
@@ -112,9 +111,9 @@ function getUsersDAOLocal() {
         return userReplaced
     }
 
-    async function updateTokenFromUser(id,token){
+    async function updateCodeFromUser(id,code){
         const userUpdated = User.findOneAndUpdate({_id:id},{
-            resetPasswordToken: token
+            resetPasswordCode: code
         });
         return userUpdated
     }
@@ -143,7 +142,7 @@ function getUsersDAOLocal() {
         deleteOne,
         deleteAll,
         changePass,
-        updateTokenFromUser,
+        updateCodeFromUser,
         findByIdWithPass,
         replaceUserWithoutPass,
         createWithoutPass

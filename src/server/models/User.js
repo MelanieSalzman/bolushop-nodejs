@@ -41,7 +41,7 @@ const userSchema = new Schema({
             'admin'
         ]
     },
-    resetPasswordToken: {
+    resetPasswordCode: {
         type: String,
         default: ''
     }

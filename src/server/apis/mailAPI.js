@@ -2,6 +2,7 @@ import config from '../../config.js'
 import jwt from 'jsonwebtoken'
 import { getUsersDAO } from '../dao/daoFactory.js'
 import nodemailer from 'nodemailer'
+import Str from '@supercharge/strings'
 
 function getMailAPI() {
 
@@ -10,14 +11,50 @@ function getMailAPI() {
     async function forgotPassword(email) {
         const user= await find(email)
         if(user!=null){
-        const token = await genToken(email) 
-        const userUpdated = await updateTokenFromUser(user,token)
-        await sendEmail(token)
+
+        const code = Str.random(6)
+        const userUpdated = await updateCodeFromUser(user,code)
+        await sendEmail(code)
         }
         return user
     }
 
-    async function sendEmail(token) {
+    async function recoverPassword(email, code) {
+        
+        let recover = false
+        const user= await find(email)
+        console.log('user',user)
+        if(user!=null&&code!=''){
+            console.log('reset', user.resetPasswordCode)
+            console.log('code', code)
+            console.log('user', user)
+            console.log('son iguales', user.resetPasswordCode == code)
+        if(user.resetPasswordCode == code){
+        recover = true
+        const userUpdated = await updateCodeFromUser(user,'')
+        }
+        }
+        console.log('recover', recover)
+        return recover
+    }
+
+    async function resetPassword(email, password) {
+        
+        let reseted = false
+        let user= await find(email)
+        if(user!=null&&password!=''){
+            try{
+            let userUpdated = await replacePassword(user,password)
+
+            reseted = true
+            }
+            catch(e){
+            
+            }}
+        return reseted
+    }
+
+    async function sendEmail(code) {
         
         // create reusable transporter object using the default SMTP transport
         let transporter = nodemailer.createTransport({
@@ -29,15 +66,15 @@ function getMailAPI() {
             pass: process.env.MAIL_PASS, // generated ethereal password
           },
         });
-    
+
         // send mail with defined transport object
         let info = await transporter.sendMail({
-          from: '"Fred Foo 👻" <foo@example.com>', // sender address
-          to: "bar@example.com, baz@example.com", // list of receivers
-          subject: "Hello ✔", // Subject line
-          text: "Hello world?", // plain text body
-          html: `<b>Accede a este link para recuperar la contraseña </b>
-        <p>http://localhost:3000/resetpassword/${token}</p>]`, // html body
+          from: '"Bolushop 👻" <noe74@ethereal.email>', // sender address
+          to: "jessica63@ethereal.email , jessica63@ethereal.email", // list of receivers
+          subject: "Recupera la contraseña en Bolushop ✔", // Subject line
+          text: "Olvidaste tu contraseña? No te preocupes :)", // plain text body
+          html: `<p>Ingresa el siguiente codigo en Bolushop para generar una nueva contraseña: </p>
+        <b>${code}</b>`, // html body
         });
     
         console.log("Message sent: %s", info.messageId);
@@ -45,8 +82,8 @@ function getMailAPI() {
         return info.messageId
       }
 
-    async function updateTokenFromUser(user,token) {
-        const userUpdated = await usersDAO.updateTokenFromUser(user._id,token)
+    async function updateCodeFromUser(user,code) {
+        const userUpdated = await usersDAO.updateCodeFromUser(user._id,code)
 
         return userUpdated
     }
@@ -108,17 +145,20 @@ function getMailAPI() {
     }
 
     async function replacePassword(userToBeUpdated,newpassword) {
-
-        let userUpdated = await usersDAO.changePassword(userToBeUpdated,newpassword)
+        let userUpdated = await usersDAO.changePass(userToBeUpdated,newpassword)
+        console.log('este es el usuario actualizado despues de cambiar la contraseña',userUpdated)
         userUpdated = await usersDAO.encryptPassword(userUpdated)
         //user.save() para guardar en la bd
-        await usersDAO.replaceUser(userUpdated._id,userUpdated)
+        
+        await usersDAO.replaceUser(userToBeUpdated._id,userUpdated)
 
         return userUpdated
     }
 
     return {
         forgotPassword,
+        recoverPassword,
+        resetPassword,
         find,
         findById,
         findByEmail,
