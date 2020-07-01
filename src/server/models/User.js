@@ -25,6 +25,10 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    mobile_number: {
+        type: String,
+        required: false
+    },
     sign_up_date: {
         type: Date,
         default: Date.now()
