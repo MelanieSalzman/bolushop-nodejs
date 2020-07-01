@@ -72,7 +72,17 @@ function getProductosApi() {
        
         return verified
 
+       
+    }
 
+    async function rate(rating, idProduct){
+        const product = await productosDAO.findById(idProduct)
+
+        if(product){
+            if(rating){
+             const added = await productosDAO.addPositive(idProduct)
+            }
+        }
     }
 
     /* function asegurarProductoValido(producto) {
@@ -93,7 +103,8 @@ function getProductosApi() {
         buscar,
         replaceProduct,
         findProductsByUserId,
-        verifyUserOfProduct
+        verifyUserOfProduct,
+        rate
     }
 }
 

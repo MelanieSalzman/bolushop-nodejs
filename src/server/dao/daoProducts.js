@@ -11,7 +11,8 @@ function getProductsDAOLocal() {
             description: ProductToBeCreated.description,
             details: ProductToBeCreated.details,
             web: ProductToBeCreated.web,
-            user: userId
+            user: userId,
+            rating: ProductToBeCreated.rating
             
         })
 
@@ -57,6 +58,8 @@ function getProductsDAOLocal() {
             description: product.description,
             details: product.details,
             web: product.web,
+            rating : product.rating
+           
         });
         return productReplaced
     }
@@ -72,6 +75,15 @@ function getProductsDAOLocal() {
         return product
     }
 
+    async function addPositive(id){
+
+        const product = Product.findByIdAndUpdate({_id: id}, {$inc: { rating: 1} });
+
+        
+        return product
+
+   }
+
 
     return {
         create,
@@ -81,7 +93,8 @@ function getProductsDAOLocal() {
         replaceProduct,
         deleteOne,
         deleteAll,
-        findProductsByUser
+        findProductsByUser,
+        addPositive
     }
 }
 

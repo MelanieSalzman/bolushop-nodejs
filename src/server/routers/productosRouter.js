@@ -1,6 +1,7 @@
 import express from 'express'
 import { getProductosApi } from '../apis/productosAPI.js'
 import verifyToken from '../middlewares/verifyToken.js'
+
 function getProductosRouter() {
 
     const router = express.Router()
@@ -138,7 +139,22 @@ function getProductosRouter() {
 
     })
     */
+   router.post('/rating/:id', verifyToken, async (req, res) => {
+      
+    const rating = req.body.rating
+  console.log(rating)
+    console.log('este es el rating que me llega en el body', rating)
+
+    try {
+        const ratingAdded = await productosAPI.rate(rating, req.params.id)
+        res.status(201).json(ratingAdded)
+    } catch (err) {
+        res.status(err.status).json(err)
+    }
+})
+
 
     return router
 }
 export default getProductosRouter
+
